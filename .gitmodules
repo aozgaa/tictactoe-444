@@ -1,0 +1,13 @@
+[submodule "ext/imgui"]
+	path = ext/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "ext/metal-cpp"]
+	path = ext/metal-cpp
+	url = https://github.com/bkaradzic/metal-cpp.git
+[submodule "ext/glm"]
+	path = ext/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "ext/sdl"]
+	path = ext/sdl
+	url = https://github.com/libsdl-org/SDL.git
+	branch = SDL2
