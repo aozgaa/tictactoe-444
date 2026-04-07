@@ -10,5 +10,5 @@ repos:
         entry: clang-format
         language: system
         files: ^(src|test)/.*\.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
-        stages: [commit, manual]
+        stages: [pre-commit, manual]
         args: ["-i"]
