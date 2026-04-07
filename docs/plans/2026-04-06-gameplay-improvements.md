@@ -55,13 +55,6 @@ Basically, we should count the number of lines "owned" by each player after each
 
 In `count_all_lines` mode, the game now resolves only when the board is full. It does not end on the first completed line. Toggling counting mid-game could trigger/untrigger a notice about a winner.
 
-### Rendering
-
-`src/Renderer.hpp` and `src/Renderer.mm` were extended so `Renderer::end_frame(...)` can accept:
-
-- `last_move_cell`
-- `terminal_line_cells`
-
 ### UI
 
 `src/main.cpp` now exposes:

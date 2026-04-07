@@ -97,22 +97,55 @@ int main(int /*argc*/, char* /*argv*/[]) {
         ImGui::SameLine();
         if (ImGui::Button("New Game")) game.reset();
 
+        if (ImGui::Button("Undo")) game.undo();
+        ImGui::SameLine();
+        if (ImGui::Button("Redo")) game.redo();
+
+        bool misere_mode = game.misere_mode;
+        if (ImGui::Checkbox("Misere Mode", &misere_mode)) {
+            game.set_misere_mode(misere_mode);
+        }
+
+        bool count_all_lines = game.count_all_lines;
+        if (ImGui::Checkbox("Count All Lines", &count_all_lines)) {
+            game.set_count_all_lines(count_all_lines);
+        }
+
         ImGui::Separator();
         ImGui::Text("Empty cell color:");
         ImGui::ColorEdit4("##face_color", empty_color,
             ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_AlphaBar);
 
         ImGui::Separator();
-        if (game.winner != Cell::Empty) {
+        if (!game.game_over) {
+            ImGui::Text("Turn: %s", game.current_player == Cell::X ? "X" : "O");
+        } else if (game.winner != Cell::Empty) {
             const char* who = (game.winner == Cell::X) ? "X wins!" : "O wins!";
             ImGui::TextColored({1.0f, 1.0f, 0.2f, 1.0f}, "%s", who);
-        } else if (game.game_over) {
-            ImGui::TextColored({0.6f, 0.6f, 0.6f, 1.0f}, "Draw!");
         } else {
-            ImGui::Text("Turn: %s", game.current_player == Cell::X ? "X" : "O");
+            ImGui::TextColored({0.6f, 0.6f, 0.6f, 1.0f}, "Draw!");
+        }
+
+        if (game.count_all_lines) {
+            ImGui::Text("Lines: X=%d  O=%d", game.x_line_count, game.o_line_count);
+            if (!game.game_over) {
+                ImGui::TextUnformatted("Scoring continues until the board is full.");
+            } else if (game.misere_mode) {
+                ImGui::TextUnformatted("Lower line count wins in misere scoring.");
+            } else {
+                ImGui::TextUnformatted("Higher line count wins.");
+            }
+        } else if (game.misere_mode) {
+            ImGui::TextUnformatted("Make a line and you lose.");
         }
         ImGui::Text("Drag=rotate  Click=place");
-        ImGui::Text("4x4x4 - get 4 in a row to win");
+        if (game.count_all_lines) {
+            ImGui::Text("4x4x4 - fill the board, then compare line totals");
+        } else if (game.misere_mode) {
+            ImGui::Text("4x4x4 - avoid making 4 in a row");
+        } else {
+            ImGui::Text("4x4x4 - get 4 in a row to win");
+        }
 
         ImGui::End();
         ImGui::Render();

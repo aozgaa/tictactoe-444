@@ -206,11 +206,20 @@ void Renderer::end_frame(const Game& game, float cell_size,
         int idx = x*N*N + y*N + z;
         Cell c = game.board[x][y][z];
 
+        const bool highlighted = game.highlighted[x][y][z];
+
         glm::vec4 col;
-        if      (c == Cell::X)           col = {0.95f, 0.25f, 0.25f, 0.85f};
-        else if (c == Cell::O)           col = {0.25f, 0.50f, 0.95f, 0.85f};
-        else if (idx == hovered_cell)    col = {empty_color.r, empty_color.g, empty_color.b, 0.60f};
-        else                             col = empty_color;
+        if (c == Cell::X) {
+            col = highlighted ? glm::vec4{1.0f, 0.92f, 0.35f, 1.0f}
+                              : glm::vec4{0.95f, 0.25f, 0.25f, 0.85f};
+        } else if (c == Cell::O) {
+            col = highlighted ? glm::vec4{1.0f, 0.92f, 0.35f, 1.0f}
+                              : glm::vec4{0.25f, 0.50f, 0.95f, 0.85f};
+        } else if (idx == hovered_cell) {
+            col = {empty_color.r, empty_color.g, empty_color.b, 0.60f};
+        } else {
+            col = empty_color;
+        }
 
         float cx = x - (N-1)*0.5f, cy = y - (N-1)*0.5f, cz = z - (N-1)*0.5f;
         glm::mat4 model = rot
