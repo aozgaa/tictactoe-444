@@ -7,6 +7,7 @@ You can play it as standard first-line-wins tic-tac-toe, or switch rules mid-gam
 - `Misere Mode`: making a line loses instead of wins
 - `Count All Lines`: play continues until the board is full, then the winner is based on total completed lines
 - `Undo` / `Redo`: rewind and replay move history
+- `Replay scripts`: run headless move traces against the same game logic used by the UI
 
 ## Controls
 
@@ -109,3 +110,45 @@ Run the executable from `build/` so it can find `default.metallib`:
 ```sh
 cd build && ./tictactoe-444
 ```
+
+## Replay Scripts
+
+The repo also builds a small headless replay tool:
+
+```sh
+cd build && ./tictactoe-444-replay path/to/script.txt
+```
+
+Script format:
+
+```text
+mode: first-line-ends
+misere: normal
+====================
+X 0,0,0
+O 0,1,0
+X 1,1,1
+O 0,2,0
+X 2,2,2
+O 0,3,0
+X 3,3,3
+```
+
+Supported header values:
+
+- `mode: first-line-ends`
+- `mode: count-all-lines`
+- `misere: normal`
+- `misere: misere`
+
+Move lines are `X x,y,z` or `O x,y,z`.
+
+The replay tool validates each move before applying it:
+
+- coordinates must be in bounds
+- the game must not already be over
+- the scripted player must match the expected player to move
+- the destination cell must be empty
+
+Each successful move emits a state snapshot including current player, winner, game-over status, and line totals for X
+and O.

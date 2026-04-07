@@ -3,6 +3,7 @@ project(tictactoe-444 CXX OBJCXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_OBJCXX_STANDARD 17)
+enable_testing()
 
 find_package(SDL2 REQUIRED)
 
@@ -48,18 +49,16 @@ target_link_libraries(
         "-framework QuartzCore"
 )
 
-add_executable(
-    tictactoe-444
-    src/main.cpp
-    src/metal_impl.mm
-    src/Renderer.mm
-    src/Game.cpp
-)
+add_library(tictactoe_core STATIC src/Game.cpp src/Replay.cpp)
+target_include_directories(tictactoe_core PUBLIC src)
+
+add_executable(tictactoe-444 src/main.cpp src/metal_impl.mm src/Renderer.mm)
 target_include_directories(tictactoe-444 PRIVATE ext/metal-cpp ext/glm src)
 target_link_libraries(
     tictactoe-444
     PRIVATE
         imgui
+        tictactoe_core
         SDL2::SDL2-static
         "-framework Metal"
         "-framework Foundation"
@@ -68,3 +67,10 @@ target_link_libraries(
         "-framework IOKit"
 )
 add_dependencies(tictactoe-444 metal_shaders)
+
+add_executable(tictactoe-444-replay src/replay_main.cpp)
+target_link_libraries(tictactoe-444-replay PRIVATE tictactoe_core)
+
+add_executable(tictactoe-444-tests tests/replay_tests.cpp)
+target_link_libraries(tictactoe-444-tests PRIVATE tictactoe_core)
+add_test(NAME tictactoe-444-tests COMMAND tictactoe-444-tests)
