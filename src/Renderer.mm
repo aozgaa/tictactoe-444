@@ -53,8 +53,8 @@ Renderer::Renderer(SDL_Window* window) {
     SDL_Metal_GetDrawableSize(window, &fb_width, &fb_height);
     SDL_GetWindowSize(window, &win_width, &win_height);
 
-    SDL_MetalView sdl_view = SDL_Metal_CreateView(window);
-    layer_ = (CA::MetalLayer*)SDL_Metal_GetLayer(sdl_view);
+    metal_view_ = SDL_Metal_CreateView(window);
+    layer_ = (CA::MetalLayer*)SDL_Metal_GetLayer(metal_view_);
 
     device_ = MTL::CreateSystemDefaultDevice();
     layer_->setDevice(device_);
@@ -78,14 +78,54 @@ Renderer::Renderer(SDL_Window* window) {
 }
 
 Renderer::~Renderer() {
-    ImGui_ImplMetal_Shutdown();
-    if (pipeline_)  pipeline_->release();
-    if (depth_ds_)  depth_ds_->release();
-    if (vbuf_)      vbuf_->release();
-    if (ibuf_)      ibuf_->release();
-    if (depth_tex_) depth_tex_->release();
-    if (queue_)     queue_->release();
-    if (device_)    device_->release();
+    shutdown();
+}
+
+void Renderer::shutdown() {
+    if (device_) {
+        ImGui_ImplMetal_Shutdown();
+    }
+    if (rpa_) {
+        rpa_->release();
+        rpa_ = nullptr;
+    }
+    if (drawable_) {
+        drawable_->release();
+        drawable_ = nullptr;
+    }
+    if (pipeline_) {
+        pipeline_->release();
+        pipeline_ = nullptr;
+    }
+    if (depth_ds_) {
+        depth_ds_->release();
+        depth_ds_ = nullptr;
+    }
+    if (vbuf_) {
+        vbuf_->release();
+        vbuf_ = nullptr;
+    }
+    if (ibuf_) {
+        ibuf_->release();
+        ibuf_ = nullptr;
+    }
+    if (depth_tex_) {
+        depth_tex_->release();
+        depth_tex_ = nullptr;
+    }
+    if (queue_) {
+        queue_->release();
+        queue_ = nullptr;
+    }
+    if (device_) {
+        device_->release();
+        device_ = nullptr;
+    }
+    layer_ = nullptr;
+    if (metal_view_) {
+        SDL_Metal_DestroyView(metal_view_);
+        metal_view_ = nullptr;
+    }
 }
 
 void Renderer::build_pipeline() {
@@ -243,6 +283,7 @@ void Renderer::end_frame(const Game& game, float cell_size,
     enc->endEncoding();
     cmd->presentDrawable(reinterpret_cast<MTL::Drawable*>(drawable_));
     cmd->commit();
+    drawable_->release();
     drawable_ = nullptr;
 }
 

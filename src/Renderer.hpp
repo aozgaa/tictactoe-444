@@ -8,6 +8,7 @@
 #include <QuartzCore/QuartzCore.hpp>
 
 struct SDL_Window;
+typedef void *SDL_MetalView;
 
 static constexpr int NO_PICK = -1;
 
@@ -15,6 +16,7 @@ class Renderer {
 public:
   explicit Renderer(SDL_Window *window);
   ~Renderer();
+  void shutdown();
 
   void begin_frame();
 
@@ -44,6 +46,7 @@ private:
   MTL::Buffer *ibuf_ = nullptr;
   MTL::Texture *depth_tex_ = nullptr;
   CA::MetalLayer *layer_ = nullptr;
+  SDL_MetalView metal_view_ = nullptr;
 
   CA::MetalDrawable *drawable_ = nullptr;
   MTL::RenderPassDescriptor *rpa_ = nullptr;

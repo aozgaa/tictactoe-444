@@ -6,15 +6,22 @@
 #include <SDL.h>
 
 #include <cmath>
+#include <cstring>
 
-int main(int /*argc*/, char * /*argv*/[]) {
+int main(int argc, char *argv[]) {
+  bool test_sdl_quit = false;
+  for (int i = 1; i < argc; ++i) {
+    if (std::strcmp(argv[i], "--test-sdl-quit") == 0) { test_sdl_quit = true; }
+  }
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
     SDL_Log("SDL_Init failed: %s", SDL_GetError());
     return 1;
   }
 
-  SDL_Window *window = SDL_CreateWindow("4x4x4 Tic-Tac-Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 800,
-                                        SDL_WINDOW_METAL | SDL_WINDOW_ALLOW_HIGHDPI);
+  const Uint32 window_flags = SDL_WINDOW_METAL | SDL_WINDOW_ALLOW_HIGHDPI | (test_sdl_quit ? SDL_WINDOW_HIDDEN : 0);
+  SDL_Window *window =
+      SDL_CreateWindow("4x4x4 Tic-Tac-Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 800, window_flags);
   if (!window) {
     SDL_Log("SDL_CreateWindow: %s", SDL_GetError());
     return 1;
@@ -39,6 +46,12 @@ int main(int /*argc*/, char * /*argv*/[]) {
   float cur_x = 0, cur_y = 0;
   float last_x = 0, last_y = 0;
   const float DRAG_THRESH = 4.0f;
+
+  if (test_sdl_quit) {
+    SDL_Event quit_event{};
+    quit_event.type = SDL_QUIT;
+    SDL_PushEvent(&quit_event);
+  }
 
   bool running = true;
   while (running) {
@@ -148,6 +161,7 @@ int main(int /*argc*/, char * /*argv*/[]) {
 
     renderer.end_frame(game, cell_size, hovered, {empty_color[0], empty_color[1], empty_color[2], empty_color[3]});
   }
+  renderer.shutdown();
 
   ImGui_ImplSDL2_Shutdown();
   ImGui::DestroyContext();
