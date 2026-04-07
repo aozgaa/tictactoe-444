@@ -5,8 +5,9 @@
 This change set implemented five related gameplay/UI improvements for the 4x4x4 tic-tac-toe app:
 
 1. Add undo/redo controls and a move-history stack so play can be rewound to the beginning and replayed forward.
-3. Added an ImGui toggle for misere mode, where creating a line loses.
-5. Added an ImGui toggle for count-all-lines mode, where play continues until the board is full and the result is based on relative line totals instead of the first completed line.
+2. Added an ImGui toggle for misere mode, where creating a line loses.
+3. Added an ImGui toggle for count-all-lines mode, where play continues until the board is full and the result is based
+   on relative line totals instead of the first completed line.
 
 ## Final Behavior
 
@@ -50,10 +51,15 @@ This change set implemented five related gameplay/UI improvements for the 4x4x4 
 - Rule toggles (`misere_mode`, `count_all_lines`)
 - Derived scoring state (`x_line_count`, `o_line_count`, `winner`, `game_over`)
 
-The winner detection logic was refactored around explicit enumeration of all 76 valid lines in the 4x4x4 grid so both first-line and count-all-lines scoring can share the same base evaluation.
-Basically, we should count the number of lines "owned" by each player after each move. in count-all-lines mode, just display this count and determine winner when board is full. In first-line-ends mode (ie regular play) instead end the game when a line is detected.
+The winner detection logic was refactored around explicit enumeration of all 76 valid lines in the 4x4x4 grid so both
+first-line and count-all-lines scoring can share the same base evaluation.
+Basically, we should count the number of lines “owned” by each player after each move.
+in count-all-lines mode, just display this count and determine winner when board is full.
+In first-line-ends mode (ie regular play) instead end the game when a line is detected.
 
-In `count_all_lines` mode, the game now resolves only when the board is full. It does not end on the first completed line. Toggling counting mid-game could trigger/untrigger a notice about a winner.
+In `count_all_lines` mode, the game now resolves only when the board is full.
+It does not end on the first completed line.
+Toggling counting mid-game could trigger/untrigger a notice about a winner.
 
 ### UI
 
@@ -64,7 +70,8 @@ In `count_all_lines` mode, the game now resolves only when the board is full. It
 - `Misere Mode`
 - `Count All Lines`
 
-The controls panel also updates status text based on the active rule set and shows live line totals when count-all-lines mode is enabled.
+The controls panel also updates status text based on the active rule set and shows live line totals when count-all-lines
+mode is enabled.
 
 ## Verification
 
@@ -72,5 +79,7 @@ The controls panel also updates status text based on the active rule set and sho
 
 ## Follow-up
 
-- If behavior is changed later, re-check count-all-lines end conditions carefully because that mode is intentionally orthogonal to misere scoring.
-- add unit tests for game behavior based on scripted/headless play (ie: a script that dictates moves alon with expected logging that certain game progress is made, eg: player 1 moves to (X,Y), player 2 wins, final score is ..., ...)
+- If behavior is changed later, re-check count-all-lines end conditions carefully because that mode is intentionally
+  orthogonal to misere scoring.
+- add unit tests for game behavior based on scripted/headless play (ie: a script that dictates moves alon with expected
+  logging that certain game progress is made, eg: player 1 moves to (X,Y), player 2 wins, final score is ..., ...)

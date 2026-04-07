@@ -46,7 +46,7 @@ You can play it as standard first-line-wins tic-tac-toe, or switch rules mid-gam
 All dependencies are vendored as git submodules under `ext/`:
 
 | Library | Purpose |
-|---------|---------|
+| --- | --- |
 | [ocornut/imgui](https://github.com/ocornut/imgui) | UI overlay |
 | [bkaradzic/metal-cpp](https://github.com/bkaradzic/metal-cpp) | C++ Metal API |
 | [g-truc/glm](https://github.com/g-truc/glm) | Math |

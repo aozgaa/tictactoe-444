@@ -12,3 +12,11 @@ repos:
         files: ^(src|test)/.*\.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
         stages: [pre-commit, manual]
         args: ["-i"]
+  - repo: local
+    hooks:
+      - id: flowmark
+        name: flowmark
+        entry: flowmark --auto
+        language: system
+        types_or: [markdown]
+
