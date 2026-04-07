@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/BlankSpruce/gersemi
+    rev: 0.26.0
+    hooks:
+    - id: gersemi
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        entry: clang-format
+        language: system
+        files: ^(src|test)/.*\.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
+        stages: [commit, manual]
+        args: ["-i"]
