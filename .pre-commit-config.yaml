@@ -9,7 +9,7 @@ repos:
         name: clang-format
         entry: clang-format
         language: system
-        files: ^(src|test)/.*\.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
+        files: ^(src|tests)/.*\.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
         stages: [pre-commit, manual]
         args: ["-i"]
   - repo: local
@@ -19,4 +19,3 @@ repos:
         entry: flowmark --auto
         language: system
         types_or: [markdown]
-
