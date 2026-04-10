@@ -10,18 +10,17 @@
 
 namespace {
 
-std::string default_header(const std::string &mode, const std::string &misere) {
-  return "mode: " + mode + "\nmisere: " + misere + "\n====================\n";
-}
-
 TEST_CASE("normal mode ends on first completed line") {
-  const std::string text = default_header("first-line-ends", "normal") + "X 0,0,0\n"
-                                                                         "O 0,1,0\n"
-                                                                         "X 1,1,1\n"
-                                                                         "O 0,2,0\n"
-                                                                         "X 2,2,2\n"
-                                                                         "O 0,3,0\n"
-                                                                         "X 3,3,3\n";
+  const std::string text = "mode: first-line-ends\n"
+                           "misere: normal\n"
+                           "====================\n"
+                           "X 0,0,0\n"
+                           "O 0,1,0\n"
+                           "X 1,1,1\n"
+                           "O 0,2,0\n"
+                           "X 2,2,2\n"
+                           "O 0,3,0\n"
+                           "X 3,3,3\n";
 
   ReplayScript script;
   std::string error;
@@ -40,13 +39,16 @@ TEST_CASE("normal mode ends on first completed line") {
 }
 
 TEST_CASE("misere mode awards win to the other player on a completed line") {
-  const std::string text = default_header("first-line-ends", "misere") + "X 0,0,0\n"
-                                                                         "O 0,1,0\n"
-                                                                         "X 1,1,1\n"
-                                                                         "O 0,2,0\n"
-                                                                         "X 2,2,2\n"
-                                                                         "O 1,0,0\n"
-                                                                         "X 3,3,3\n";
+  const std::string text = "mode: first-line-ends\n"
+                           "misere: misere\n"
+                           "====================\n"
+                           "X 0,0,0\n"
+                           "O 0,1,0\n"
+                           "X 1,1,1\n"
+                           "O 0,2,0\n"
+                           "X 2,2,2\n"
+                           "O 1,0,0\n"
+                           "X 3,3,3\n";
 
   ReplayScript script;
   std::string error;
@@ -61,8 +63,11 @@ TEST_CASE("misere mode awards win to the other player on a completed line") {
 }
 
 TEST_CASE("replay rejects moves from the wrong player") {
-  const std::string text = default_header("first-line-ends", "normal") + "X 0,0,0\n"
-                                                                         "X 1,0,0\n";
+  const std::string text = "mode: first-line-ends\n"
+                           "misere: normal\n"
+                           "====================\n"
+                           "X 0,0,0\n"
+                           "X 1,0,0\n";
 
   ReplayScript script;
   std::string error;
@@ -94,7 +99,9 @@ TEST_CASE("count-all-lines mode scores the full board correctly") {
   }
 
   std::ostringstream oss;
-  oss << default_header("count-all-lines", "normal");
+  oss << "mode: count-all-lines\n"
+         "misere: normal\n"
+         "====================\n";
   for (std::size_t i = 0; i < even_cells.size(); ++i) {
     oss << "X " << even_cells[i] << "\n";
     oss << "O " << odd_cells[i] << "\n";
