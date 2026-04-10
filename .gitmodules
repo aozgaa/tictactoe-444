@@ -11,3 +11,7 @@
 	path = ext/sdl
 	url = https://github.com/libsdl-org/SDL.git
 	branch = SDL2
+[submodule "ext/doctest"]
+	path = ext/doctest
+  url = git@github.com:doctest/doctest.git
+  branch = v2.5.0

@@ -54,6 +54,12 @@ function(configure_build_install name source_dir)
     endif()
 endfunction()
 
+configure_build_install(doctest "${PROJECT_ROOT}/ext/doctest"
+  CONFIGURE_ARGS
+    -DDOCTEST_WITH_TESTS=OFF
+    -DDOCTEST_WITH_MAIN_IN_STATIC_LIB=OFF
+)
+
 configure_build_install(sdl2 "${PROJECT_ROOT}/ext/sdl"
   CONFIGURE_ARGS
     -DSDL_SHARED=OFF
